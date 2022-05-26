@@ -1,0 +1,35 @@
+name: Shuttle deploy
+description: 'Deploy to shuttle'
+
+inputs:
+  shuttle-deploy-key:
+    description: 'The key found at "https://www.shuttle.rs/login"'
+    required: true
+  working-directory:
+    description: "directory which Cargo.toml is under"
+    required: false
+    default: "."
+
+runs:
+  using: "composite"
+  steps:
+    - id: check-repo-is-not-initialized
+      run: echo "::set-output name=remote-url::$( git config --get remote.origin.url )"
+      shell: bash
+    - uses: actions/checkout@v2
+      if: ${{ !contains(steps.check-repo-is-not-initialized.outputs.remote-url, github.repository) }}
+    - name: Install shuttle cli
+      run: |
+        # using cargo-quickinstall because it is faster to get shuttle-cli binary
+        cargo install cargo-quickinstall
+        cargo quickinstall cargo-shuttle
+      shell: bash
+    - name: Log into shuttle
+      run: |
+        cargo shuttle login --api-key ${{ inputs.shuttle-deploy-key }}
+      shell: bash
+    - name: Deploy to shuttle
+      run:
+        cargo shuttle deploy | awk '!/Database URI.*?$/'
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
