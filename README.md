@@ -1,8 +1,8 @@
-# Shuttle deploy actions
+# Shuttle deploy action
 
-Deploys current workspace to [shuttle.rs](https://www.shuttle.rs)
+Deploys current project to [shuttle.rs](https://www.shuttle.rs)
 
-Will checkout the repo if not already checked out
+Will checkout the repository if not already checked out
 
 ### Inputs
 
@@ -25,12 +25,9 @@ on:
       - "main"
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Check source
-        run: |
-          cargo check
       - uses: shuttle-hq/shuttle-deploy-action@main
         with:
           shuttle-deploy-key: ${{ secrets.SHUTTLE_DEPLOY_KEY }}

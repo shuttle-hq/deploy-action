@@ -1,5 +1,5 @@
 name: Shuttle deploy
-description: 'Deploy to shuttle'
+description: "Deploy to shuttle"
 
 inputs:
   shuttle-deploy-key:
@@ -26,10 +26,9 @@ runs:
       shell: bash
     - name: Log into shuttle
       run: |
-        cargo shuttle login --api-key ${{ inputs.shuttle-deploy-key }}
+        cargo shuttle login --api-key ${{ inputs.shuttle-deploy-key }} --allow-dirty
       shell: bash
     - name: Deploy to shuttle
-      run:
-        cargo shuttle deploy | awk '!/Database URI.*?$/'
+      run: cargo shuttle deploy | awk '!/Database URI.*?$/'
       working-directory: ${{ inputs.working-directory }}
       shell: bash
