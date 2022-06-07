@@ -2,13 +2,17 @@ name: Shuttle deploy
 description: "Deploy to shuttle"
 
 inputs:
-  shuttle-deploy-key:
-    description: 'The key found at "https://www.shuttle.rs/login"'
+  deploy-key:
+    description: 'the key found at "https://www.shuttle.rs/login"'
     required: true
   working-directory:
-    description: "directory which Cargo.toml is under"
+    description: "the directory which includes the `Cargo.toml`"
     required: false
     default: "."
+  allow-dirty:
+    description: "allow uncommitted changes to be deployed"
+    required: false
+    default: "false"
 
 runs:
   using: "composite"
@@ -25,10 +29,14 @@ runs:
         cargo quickinstall cargo-shuttle
       shell: bash
     - name: Log into shuttle
-      run: |
-        cargo shuttle login --api-key ${{ inputs.shuttle-deploy-key }} --allow-dirty
+      run: cargo shuttle login --api-key ${{ inputs.deploy-key }}
       shell: bash
     - name: Deploy to shuttle
+      if: ${{ inputs.allow-dirty == "false" }}
       run: cargo shuttle deploy | awk '!/Database URI.*?$/'
+      shell: bash
+    - name: Deploy to shuttle
+      if: ${{ inputs.allow-dirty != "false" }}
+      run: cargo shuttle deploy --allow-dirty | awk '!/Database URI.*?$/'
       working-directory: ${{ inputs.working-directory }}
       shell: bash
