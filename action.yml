@@ -1,4 +1,4 @@
-name: Shuttle deploy
+name: ShuttleHQ deploy
 description: "Deploy to shuttle"
 
 inputs:
