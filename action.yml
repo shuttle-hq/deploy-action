@@ -34,6 +34,7 @@ runs:
     - name: Deploy to shuttle
       if: ${{ inputs.allow-dirty == 'false' }}
       run: cargo shuttle deploy | awk '!/Database URI.*?$/'
+      working-directory: ${{ inputs.working-directory }}
       shell: bash
     - name: Deploy to shuttle
       if: ${{ inputs.allow-dirty != 'false' }}
