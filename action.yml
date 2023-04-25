@@ -24,9 +24,9 @@ runs:
       if: ${{ !contains(steps.check-repo-is-not-initialized.outputs.remote-url, github.repository) }}
     - name: Install shuttle cli
       run: |
-        # using cargo-quickinstall because it is faster to get shuttle-cli binary
-        cargo install cargo-quickinstall
-        cargo quickinstall cargo-shuttle
+        # using cargo-binstall because it is faster to get shuttle-cli binary
+        cargo install cargo-binstall
+        cargo binstall cargo-shuttle
       shell: bash
     - name: Log into shuttle
       run: cargo shuttle login --api-key ${{ inputs.deploy-key }}
