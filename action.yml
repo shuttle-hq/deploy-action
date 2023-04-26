@@ -26,7 +26,7 @@ runs:
       run: |
         # using cargo-binstall because it is faster to get shuttle-cli binary
         cargo install cargo-binstall
-        cargo binstall cargo-shuttle
+        cargo binstall -y cargo-shuttle
       shell: bash
     - name: Log into shuttle
       run: cargo shuttle login --api-key ${{ inputs.deploy-key }}
