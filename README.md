@@ -9,7 +9,7 @@ You can see the documentation on how to create a project [here](https://docs.shu
 
 | Name | Description | Required | Default |
 | --- | --- | --- | --- |
-| shuttle_api_key | The Shuttle API key | true | N/A |
+| deploy_key | The Shuttle API key | true | N/A |
 | working_directory | The directory which includes the `Cargo.toml` | false | `"."` |
 | allow_dirty | Allow uncommitted changes to be deployed | false | `"false"` |
 
@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: shuttle-hq/deploy-action@main
         with:
-          shuttle_api_key: ${{ secrets.SHUTTLE_DEPLOY_KEY }}
+          deploy_key: ${{ secrets.SHUTTLE_DEPLOY_KEY }}
 ```
 
 ### Example with all inputs
@@ -56,7 +56,7 @@ jobs:
     steps:
       - uses: shuttle-hq/deploy-action@main
         with:
-          shuttle_api_key: ${{ secrets.SHUTTLE_DEPLOY_KEY }}
+          deploy_key: ${{ secrets.SHUTTLE_DEPLOY_KEY }}
           working_directory: "my-project"
           allow_dirty: "true"
 ```
