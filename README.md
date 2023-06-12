@@ -9,15 +9,15 @@ You can see the documentation on how to create a project [here](https://docs.shu
 
 | Name | Description | Required | Default |
 | --- | --- | --- | --- |
-| shuttle_api_key | The Shuttle API key | true | N/A |
-| working_directory | The directory which includes the `Cargo.toml` | false | `"."` |
-| allow_dirty | Allow uncommitted changes to be deployed | false | `"false"` |
+| deploy-key | The Shuttle API key | true | N/A |
+| working-directory | The directory which includes the `Cargo.toml` | false | `"."` |
+| allow-dirty | Allow uncommitted changes to be deployed | false | `"false"` |
 
 ## Outputs
 
 | Name | Description |
 | --- | --- |
-| shuttle_url | The URL of the deployed project |
+| shuttle-url | The URL of the deployed project |
 
 ## Example usage
 
@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: shuttle-hq/deploy-action@main
         with:
-          shuttle_api_key: ${{ secrets.SHUTTLE_DEPLOY_KEY }}
+          deploy-key: ${{ secrets.SHUTTLE_DEPLOY_KEY }}
 ```
 
 ### Example with all inputs
@@ -56,7 +56,7 @@ jobs:
     steps:
       - uses: shuttle-hq/deploy-action@main
         with:
-          shuttle_api_key: ${{ secrets.SHUTTLE_DEPLOY_KEY }}
-          working_directory: "my-project"
-          allow_dirty: "true"
+          deploy-key: ${{ secrets.SHUTTLE_DEPLOY_KEY }}
+          working-directory: "my-project"
+          allow-dirty: "true"
 ```
