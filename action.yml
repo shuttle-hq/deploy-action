@@ -17,27 +17,28 @@ inputs:
 runs:
   using: "composite"
   steps:
+      # check out repo if not done already
     - id: check-repo-is-not-initialized
       run: echo "remote-url=$( git config --get remote.origin.url )" >> $GITHUB_OUTPUT
       shell: bash
     - uses: actions/checkout@v3
       if: ${{ !contains(steps.check-repo-is-not-initialized.outputs.remote-url, github.repository) }}
-    - name: Install shuttle cli
-      run: |
-        # using cargo-binstall because it is faster to get shuttle-cli binary
-        cargo install cargo-binstall
-        cargo binstall -y cargo-shuttle
-      shell: bash
-    - name: Log into shuttle
-      run: cargo shuttle login --api-key ${{ inputs.deploy-key }}
-      shell: bash
+
+      # using cargo-binstall because it is faster to get shuttle-cli binary
+    - name: Install cargo-binstall
+      run: curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+    - name: Install cargo-shuttle
+      run: cargo binstall -y cargo-shuttle
+
     - name: Deploy to shuttle
       if: ${{ inputs.allow-dirty == 'false' }}
       run: cargo shuttle deploy | awk '!/Database URI.*?$/'
       working-directory: ${{ inputs.working-directory }}
-      shell: bash
+      env:
+        SHUTTLE_API_KEY: ${{ inputs.deploy-key }}
     - name: Deploy to shuttle
       if: ${{ inputs.allow-dirty != 'false' }}
       run: cargo shuttle deploy --allow-dirty | awk '!/Database URI.*?$/'
       working-directory: ${{ inputs.working-directory }}
-      shell: bash
+      env:
+        SHUTTLE_API_KEY: ${{ inputs.deploy-key }}
