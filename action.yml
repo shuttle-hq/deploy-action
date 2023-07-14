@@ -1,5 +1,5 @@
-name: ShuttleHQ deploy
-description: "Deploy to shuttle"
+name: Shuttle Deploy
+description: "Deploy to Shuttle"
 
 inputs:
   deploy-key:
@@ -13,6 +13,14 @@ inputs:
     description: "allow uncommitted changes to be deployed"
     required: false
     default: "false"
+  no-test:
+    description: "don't run tests before deployment"
+    required: false
+    default: "false"
+  cargo-shuttle-version:
+    description: "version of cargo-shuttle, default: latest"
+    required: false
+    default: ""
 
 runs:
   using: "composite"
@@ -24,21 +32,26 @@ runs:
     - uses: actions/checkout@v3
       if: ${{ !contains(steps.check-repo-is-not-initialized.outputs.remote-url, github.repository) }}
 
-      # using cargo-binstall because it is faster to get shuttle-cli binary
+      # install with cargo-binstall
     - name: Install cargo-binstall
       run: curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+      shell: bash
     - name: Install cargo-shuttle
+      if: ${{ inputs.cargo-shuttle-version == '' }}
       run: cargo binstall -y cargo-shuttle
+      shell: bash
+    - name: Install cargo-shuttle ${{ inputs.cargo-shuttle-version }}
+      if: ${{ inputs.cargo-shuttle-version != '' }}
+      run: cargo binstall -y cargo-shuttle@${{ inputs.cargo-shuttle-version }}
+      shell: bash
 
-    - name: Deploy to shuttle
-      if: ${{ inputs.allow-dirty == 'false' }}
-      run: cargo shuttle deploy | awk '!/Database URI.*?$/'
+    - name: Deploy to Shuttle
+      run: |
+        cargo shuttle deploy \
+        $(if [ "${{ inputs.allow-dirty }}" != "false" ]; then echo --allow-dirty; fi) \
+        $(if [ "${{ inputs.no-test }}" != "false" ]; then echo --no-test; fi) \
+        | awk '!/Database URI.*?$/'
       working-directory: ${{ inputs.working-directory }}
       env:
         SHUTTLE_API_KEY: ${{ inputs.deploy-key }}
-    - name: Deploy to shuttle
-      if: ${{ inputs.allow-dirty != 'false' }}
-      run: cargo shuttle deploy --allow-dirty | awk '!/Database URI.*?$/'
-      working-directory: ${{ inputs.working-directory }}
-      env:
-        SHUTTLE_API_KEY: ${{ inputs.deploy-key }}
+      shell: bash
