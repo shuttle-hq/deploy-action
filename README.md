@@ -10,10 +10,11 @@ You can see the documentation on how to create a project [here](https://docs.shu
 | Name | Description | Required | Default |
 | --- | --- | --- | --- |
 | deploy-key | The Shuttle API key | true | N/A |
+| cargo-shuttle-version | Version of cargo-shuttle | false | `""` (latest) |
 | working-directory | The directory which includes the `Cargo.toml` | false | `"."` |
+| name | The directory which includes the `Cargo.toml` | false | `"."` |
 | allow-dirty | Allow uncommitted changes to be deployed | false | `"false"` |
 | no-test | Don't run tests before deployment | false | `"false"` |
-| cargo-shuttle-version | Version of cargo-shuttle | false | `""` (latest) |
 
 ## Outputs
 
@@ -26,7 +27,7 @@ You can see the documentation on how to create a project [here](https://docs.shu
 ### Typical Example
 
 ```yaml
-name: Shuttle deploy
+name: Shuttle Deploy
 
 on:
   push:
@@ -46,7 +47,7 @@ jobs:
 ### Example with all inputs
 
 ```yaml
-name: Shuttle deploy
+name: Shuttle Deploy
 
 on:
   push:

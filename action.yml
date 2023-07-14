@@ -1,26 +1,30 @@
 name: Shuttle Deploy
-description: "Deploy to Shuttle"
+description: Deploy to Shuttle
 
 inputs:
   deploy-key:
-    description: 'the key found at "https://www.shuttle.rs/login"'
+    description: 'The key found at "https://www.shuttle.rs/login"'
     required: true
+  cargo-shuttle-version:
+    description: "Version of cargo-shuttle"
+    required: false
+    default: ""
   working-directory:
-    description: "the directory which includes the `Cargo.toml`"
+    description: "The directory which includes the `Cargo.toml`"
     required: false
     default: "."
+  name:
+    description: "Name of the project (overrides crate name & Shuttle.toml)"
+    required: false
+    default: ""
   allow-dirty:
-    description: "allow uncommitted changes to be deployed"
+    description: "Allow uncommitted changes to be deployed"
     required: false
     default: "false"
   no-test:
-    description: "don't run tests before deployment"
+    description: "Don't run tests before deployment"
     required: false
     default: "false"
-  cargo-shuttle-version:
-    description: "version of cargo-shuttle"
-    required: false
-    default: ""
 
 runs:
   using: "composite"
@@ -48,6 +52,7 @@ runs:
     - name: Deploy to Shuttle
       run: |
         cargo shuttle deploy \
+        $(if [ "${{ inputs.name }}" != "" ]; then echo "--name ${{ inputs.name }}"; fi) \
         $(if [ "${{ inputs.allow-dirty }}" != "false" ]; then echo --allow-dirty; fi) \
         $(if [ "${{ inputs.no-test }}" != "false" ]; then echo --no-test; fi) \
         | awk '!/Database URI.*?$/'
