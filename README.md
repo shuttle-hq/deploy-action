@@ -1,6 +1,6 @@
 # Shuttle Deploy Action
 
-This action automates the deployment of a rust project to [Shuttle](https://www.shuttle.rs/). This action builds the project and then deploys the result to Shuttle.
+This action automates the deployment of a Rust project to [Shuttle](https://www.shuttle.rs/). This action deploys the project to Shuttle, which builds it and hosts it.
 
 Note that you need to have created a project on Shuttle before you can deploy to it. This action will NOT create a new project for you.
 You can see the documentation on how to create a project [here](https://docs.shuttle.rs/introduction/quick-start).
@@ -12,12 +12,14 @@ You can see the documentation on how to create a project [here](https://docs.shu
 | deploy-key | The Shuttle API key | true | N/A |
 | working-directory | The directory which includes the `Cargo.toml` | false | `"."` |
 | allow-dirty | Allow uncommitted changes to be deployed | false | `"false"` |
+| no-test | Don't run tests before deployment | false | `"false"` |
+| cargo-shuttle-version | Version of cargo-shuttle | false | `""` (latest) |
 
 ## Outputs
 
 | Name | Description |
 | --- | --- |
-| shuttle-url | The URL of the deployed project |
+<!-- | shuttle-url | The URL of the deployed project | -->
 
 ## Example usage
 
@@ -30,6 +32,7 @@ on:
   push:
     branches:
       - "main"
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -49,6 +52,7 @@ on:
   push:
     branches:
       - "main"
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -57,6 +61,8 @@ jobs:
       - uses: shuttle-hq/deploy-action@main
         with:
           deploy-key: ${{ secrets.SHUTTLE_DEPLOY_KEY }}
-          working-directory: "my-project"
+          working-directory: "backend"
           allow-dirty: "true"
+          no-test: "true"
+          cargo-shuttle-version: "0.21.0"
 ```

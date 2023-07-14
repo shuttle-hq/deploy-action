@@ -18,7 +18,7 @@ inputs:
     required: false
     default: "false"
   cargo-shuttle-version:
-    description: "version of cargo-shuttle, default: latest"
+    description: "version of cargo-shuttle"
     required: false
     default: ""
 
