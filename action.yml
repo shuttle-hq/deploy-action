@@ -42,11 +42,11 @@ runs:
       shell: bash
     - name: Install cargo-shuttle
       if: ${{ inputs.cargo-shuttle-version == '' }}
-      run: cargo binstall -y cargo-shuttle
+      run: cargo binstall -y --locked cargo-shuttle
       shell: bash
     - name: Install cargo-shuttle ${{ inputs.cargo-shuttle-version }}
       if: ${{ inputs.cargo-shuttle-version != '' }}
-      run: cargo binstall -y cargo-shuttle@${{ inputs.cargo-shuttle-version }}
+      run: cargo binstall -y --locked cargo-shuttle@${{ inputs.cargo-shuttle-version }}
       shell: bash
 
     - name: Deploy to Shuttle
