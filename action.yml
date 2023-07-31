@@ -1,43 +1,62 @@
-name: ShuttleHQ deploy
-description: "Deploy to shuttle"
+name: Shuttle Deploy
+description: Deploy to Shuttle
 
 inputs:
   deploy-key:
-    description: 'the key found at "https://www.shuttle.rs/login"'
+    description: 'The key found at "https://www.shuttle.rs/login"'
     required: true
+  cargo-shuttle-version:
+    description: "Version of cargo-shuttle"
+    required: false
+    default: ""
   working-directory:
-    description: "the directory which includes the `Cargo.toml`"
+    description: "The directory which includes the `Cargo.toml`"
     required: false
     default: "."
+  name:
+    description: "Name of the project (overrides crate name & Shuttle.toml)"
+    required: false
+    default: ""
   allow-dirty:
-    description: "allow uncommitted changes to be deployed"
+    description: "Allow uncommitted changes to be deployed"
+    required: false
+    default: "false"
+  no-test:
+    description: "Don't run tests before deployment"
     required: false
     default: "false"
 
 runs:
   using: "composite"
   steps:
+      # check out repo if not done already
     - id: check-repo-is-not-initialized
       run: echo "remote-url=$( git config --get remote.origin.url )" >> $GITHUB_OUTPUT
       shell: bash
     - uses: actions/checkout@v3
       if: ${{ !contains(steps.check-repo-is-not-initialized.outputs.remote-url, github.repository) }}
-    - name: Install shuttle cli
+
+      # install with cargo-binstall
+    - name: Install cargo-binstall
+      run: curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+      shell: bash
+    - name: Install cargo-shuttle
+      if: ${{ inputs.cargo-shuttle-version == '' }}
+      run: cargo binstall -y --locked cargo-shuttle
+      shell: bash
+    - name: Install cargo-shuttle ${{ inputs.cargo-shuttle-version }}
+      if: ${{ inputs.cargo-shuttle-version != '' }}
+      run: cargo binstall -y --locked cargo-shuttle@${{ inputs.cargo-shuttle-version }}
+      shell: bash
+
+    - name: Deploy to Shuttle
       run: |
-        # using cargo-binstall because it is faster to get shuttle-cli binary
-        cargo install cargo-binstall
-        cargo binstall -y cargo-shuttle
-      shell: bash
-    - name: Log into shuttle
-      run: cargo shuttle login --api-key ${{ inputs.deploy-key }}
-      shell: bash
-    - name: Deploy to shuttle
-      if: ${{ inputs.allow-dirty == 'false' }}
-      run: cargo shuttle deploy | awk '!/Database URI.*?$/'
+        cargo shuttle deploy \
+        $(if [ "${{ inputs.name }}" != "" ]; then echo "--name ${{ inputs.name }}"; fi) \
+        $(if [ "${{ inputs.allow-dirty }}" != "false" ]; then echo --allow-dirty; fi) \
+        $(if [ "${{ inputs.no-test }}" != "false" ]; then echo --no-test; fi) \
+        | awk '!/Database URI.*?$/'
       working-directory: ${{ inputs.working-directory }}
-      shell: bash
-    - name: Deploy to shuttle
-      if: ${{ inputs.allow-dirty != 'false' }}
-      run: cargo shuttle deploy --allow-dirty | awk '!/Database URI.*?$/'
-      working-directory: ${{ inputs.working-directory }}
+      env:
+        SHUTTLE_API_KEY: ${{ inputs.deploy-key }}
       shell: bash
