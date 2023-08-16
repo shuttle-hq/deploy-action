@@ -17,6 +17,10 @@ inputs:
     description: "Name of the project (overrides crate name & Shuttle.toml)"
     required: false
     default: ""
+  idle-minutes:
+    description: "Idle timeout for the deployment"
+    required: false
+    default: ""
   allow-dirty:
     description: "Allow uncommitted changes to be deployed"
     required: false
@@ -55,6 +59,7 @@ runs:
         $(if [ "${{ inputs.name }}" != "" ]; then echo "--name ${{ inputs.name }}"; fi) \
         $(if [ "${{ inputs.allow-dirty }}" != "false" ]; then echo --allow-dirty; fi) \
         $(if [ "${{ inputs.no-test }}" != "false" ]; then echo --no-test; fi) \
+        $(if [ "${{ inputs.idle-minutes }}" != "" ]; then echo --idle-minutes $ {{ inputs.idle-minutes }}; fi) \
         | awk '!/Database URI.*?$/'
       working-directory: ${{ inputs.working-directory }}
       env:
