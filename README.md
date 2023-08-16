@@ -15,6 +15,7 @@ Shuttle Secrets are not handled by this action (yet). Add secrets using Secrets.
 | cargo-shuttle-version | Version of cargo-shuttle | false | `""` (latest) |
 | working-directory | The directory which includes the `Cargo.toml` | false | `"."` |
 | name | The directory which includes the `Cargo.toml` | false | `"."` |
+| idle-minutes | Sets the idle timeout for the deployment | false | `""` |
 | allow-dirty | Allow uncommitted changes to be deployed | false | `"false"` |
 | no-test | Don't run tests before deployment | false | `"false"` |
 
@@ -66,6 +67,7 @@ jobs:
           deploy-key: ${{ secrets.SHUTTLE_DEPLOY_KEY }}
           working-directory: "backend"
           name: "my-project"
+          idle-minutes: 0
           allow-dirty: "true"
           no-test: "true"
           cargo-shuttle-version: "0.21.0"
