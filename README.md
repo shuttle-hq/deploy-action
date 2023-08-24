@@ -9,14 +9,15 @@ Shuttle Secrets are not handled by this action (yet). Add secrets using Secrets.
 
 ## Inputs
 
-| Name | Description | Required | Default |
-| --- | --- | --- | --- |
-| deploy-key | The Shuttle API key | true | N/A |
+| Name                  | Description | Required | Default |
+|-----------------------| --- | --- | --- |
+| deploy-key            | The Shuttle API key | true | N/A |
 | cargo-shuttle-version | Version of cargo-shuttle | false | `""` (latest) |
-| working-directory | The directory which includes the `Cargo.toml` | false | `"."` |
-| name | The directory which includes the `Cargo.toml` | false | `"."` |
-| allow-dirty | Allow uncommitted changes to be deployed | false | `"false"` |
-| no-test | Don't run tests before deployment | false | `"false"` |
+| working-directory     | The directory which includes the `Cargo.toml` | false | `"."` |
+| name                  | The directory which includes the `Cargo.toml` | false | `"."` |
+| allow-dirty           | Allow uncommitted changes to be deployed | false | `"false"` |
+| no-test               | Don't run tests before deployment | false | `"false"` |
+| secrets               | Content of the `Secrets.toml` file, if any | false | `""` |
 
 ## Outputs
 
@@ -69,4 +70,7 @@ jobs:
           allow-dirty: "true"
           no-test: "true"
           cargo-shuttle-version: "0.21.0"
+          secrets: |
+            MY_AWESOME_SECRET_1 = '${{ secrets.SECRET_1 }}'
+            MY_AWESOME_SECRET_2 = '${{ secrets.SECRET_2 }}'
 ```
