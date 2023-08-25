@@ -25,6 +25,12 @@ inputs:
     description: "Don't run tests before deployment"
     required: false
     default: "false"
+  secrets:
+    description: |
+      Content of the `Secrets.toml` file, if any.
+      Use multiline text with `|` in case of multiple secrets
+    required: false
+    default: ""
 
 runs:
   using: "composite"
@@ -47,6 +53,12 @@ runs:
     - name: Install cargo-shuttle ${{ inputs.cargo-shuttle-version }}
       if: ${{ inputs.cargo-shuttle-version != '' }}
       run: cargo binstall -y --locked cargo-shuttle@${{ inputs.cargo-shuttle-version }}
+      shell: bash
+
+    - name: Create secret file
+      if: ${{ inputs.secrets != '' }}
+      run: echo "${{ inputs.secrets }}" > Secrets.toml
+      working-directory: ${{ inputs.working-directory }}
       shell: bash
 
     - name: Deploy to Shuttle
