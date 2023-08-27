@@ -31,6 +31,10 @@ inputs:
       Use multiline text with `|` in case of multiple secrets
     required: false
     default: ""
+  idle-minutes:
+    description: Duration in minutes that an idle project is kept alive before being put to sleep (0 to never sleep)
+    required: false
+    default: "30"
 
 runs:
   using: "composite"
@@ -67,6 +71,7 @@ runs:
         $(if [ "${{ inputs.name }}" != "" ]; then echo "--name ${{ inputs.name }}"; fi) \
         $(if [ "${{ inputs.allow-dirty }}" != "false" ]; then echo --allow-dirty; fi) \
         $(if [ "${{ inputs.no-test }}" != "false" ]; then echo --no-test; fi) \
+        $(if [ "${{ inputs.idle-minutes }}" != "30" ]; then echo "--idle-minutes ${{ inputs.idle-minutes }}"; fi) \
         | awk '!/Database URI.*?$/'
       working-directory: ${{ inputs.working-directory }}
       env:

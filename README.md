@@ -18,6 +18,7 @@ Shuttle Secrets are not handled by this action (yet). Add secrets using Secrets.
 | allow-dirty           | Allow uncommitted changes to be deployed | false | `"false"` |
 | no-test               | Don't run tests before deployment | false | `"false"` |
 | secrets               | Content of the `Secrets.toml` file, if any | false | `""` |
+| idle-minutes          | Duration in minutes that an idle project is kept alive before being put to sleep (0 to never sleep) | false | `"30"` |
 
 ## Outputs
 
