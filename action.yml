@@ -21,6 +21,10 @@ inputs:
     description: "Allow uncommitted changes to be deployed"
     required: false
     default: "false"
+  idle-minutes:
+    description: "Number of minutes to keep the deployment alive before stopping it"
+    required: false
+    default: ""
   no-test:
     description: "Don't run tests before deployment"
     required: false
@@ -66,6 +70,7 @@ runs:
         cargo shuttle deploy \
         $(if [ "${{ inputs.name }}" != "" ]; then echo "--name ${{ inputs.name }}"; fi) \
         $(if [ "${{ inputs.allow-dirty }}" != "false" ]; then echo --allow-dirty; fi) \
+        $(if [ "${{ inputs.idle-minutes }}" != "" ]; then echo "--idle-minutes ${{ inputs.idle-minutes }}"; fi) \
         $(if [ "${{ inputs.no-test }}" != "false" ]; then echo --no-test; fi) \
         | awk '!/Database URI.*?$/'
       working-directory: ${{ inputs.working-directory }}

@@ -16,6 +16,7 @@ Shuttle Secrets are not handled by this action (yet). Add secrets using Secrets.
 | working-directory     | The directory which includes the `Cargo.toml` | false | `"."` |
 | name                  | The directory which includes the `Cargo.toml` | false | `"."` |
 | allow-dirty           | Allow uncommitted changes to be deployed | false | `"false"` |
+| idle-minutes          | How long to wait before putting the project in an idle state due to inactivity. 0 means the project will never idle. | false | `"30"` |
 | no-test               | Don't run tests before deployment | false | `"false"` |
 | secrets               | Content of the `Secrets.toml` file, if any | false | `""` |
 
@@ -68,6 +69,7 @@ jobs:
           working-directory: "backend"
           name: "my-project"
           allow-dirty: "true"
+          idle-minutes: "10"
           no-test: "true"
           cargo-shuttle-version: "0.21.0"
           secrets: |
