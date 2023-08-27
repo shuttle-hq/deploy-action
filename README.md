@@ -5,7 +5,10 @@ This action automates the deployment of a Rust project to [Shuttle](https://www.
 Note that you need to have created a project on Shuttle before you can deploy to it. This action will NOT create a new project for you.
 You can see the documentation on how to create a project [here](https://docs.shuttle.rs/introduction/quick-start).
 
-Shuttle Secrets are not handled by this action (yet). Add secrets using Secrets.toml with a manual deploy command. Read more about secrets [here](https://docs.shuttle.rs/resources/shuttle-secrets).
+**Shuttle Secrets** are being saved from previous deployments, therefore, they may be omitted for future deployments.  
+The choice is yours, whether you prefer to add **Shuttle Secrets** with a manual deployment, or in a continuous way using the `secrets` input of this action.
+However, keep in mind that **Shuttle Secrets** can not be deleted at the moment.
+Read more about **Shuttle Secrets** [here](https://docs.shuttle.rs/resources/shuttle-secrets).
 
 ## Inputs
 
