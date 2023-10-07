@@ -7,7 +7,6 @@ You can see the documentation on how to create a project [here](https://docs.shu
 
 **Shuttle Secrets** are being saved from previous deployments, therefore, they may be omitted for future deployments.  
 The choice is yours, whether you prefer to add **Shuttle Secrets** with a manual deployment, or in a continuous way using the `secrets` input of this action.
-However, keep in mind that **Shuttle Secrets** can not be deleted at the moment.
 Read more about **Shuttle Secrets** [here](https://docs.shuttle.rs/resources/shuttle-secrets).
 
 ## Inputs
@@ -17,7 +16,7 @@ Read more about **Shuttle Secrets** [here](https://docs.shuttle.rs/resources/shu
 | deploy-key            | The Shuttle API key | true | N/A |
 | cargo-shuttle-version | Version of cargo-shuttle | false | `""` (latest) |
 | working-directory     | The directory which includes the `Cargo.toml` | false | `"."` |
-| name                  | The directory which includes the `Cargo.toml` | false | `"."` |
+| name                  | Override the project name | false | `""` |
 | allow-dirty           | Allow uncommitted changes to be deployed | false | `"false"` |
 | no-test               | Don't run tests before deployment | false | `"false"` |
 | secrets               | Content of the `Secrets.toml` file, if any | false | `""` |
@@ -38,7 +37,7 @@ name: Shuttle Deploy
 on:
   push:
     branches:
-      - "main"
+      - main
   workflow_dispatch:
 
 jobs:
@@ -47,7 +46,7 @@ jobs:
     steps:
       - uses: shuttle-hq/deploy-action@main
         with:
-          deploy-key: ${{ secrets.SHUTTLE_DEPLOY_KEY }}
+          deploy-key: ${{ secrets.SHUTTLE_API_KEY }}
 ```
 
 ### Example with all inputs
@@ -58,7 +57,7 @@ name: Shuttle Deploy
 on:
   push:
     branches:
-      - "main"
+      - main
   workflow_dispatch:
 
 jobs:
@@ -67,12 +66,12 @@ jobs:
     steps:
       - uses: shuttle-hq/deploy-action@main
         with:
-          deploy-key: ${{ secrets.SHUTTLE_DEPLOY_KEY }}
+          deploy-key: ${{ secrets.SHUTTLE_API_KEY }}
           working-directory: "backend"
           name: "my-project"
           allow-dirty: "true"
           no-test: "true"
-          cargo-shuttle-version: "0.21.0"
+          cargo-shuttle-version: "0.28.1"
           secrets: |
             MY_AWESOME_SECRET_1 = '${{ secrets.SECRET_1 }}'
             MY_AWESOME_SECRET_2 = '${{ secrets.SECRET_2 }}'
