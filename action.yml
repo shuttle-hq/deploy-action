@@ -25,6 +25,10 @@ inputs:
     description: "Don't run tests before deployment"
     required: false
     default: "false"
+  restart:
+    description: "Restart project before deployment"
+    required: false
+    default: "false"
   secrets:
     description: |
       Content of the `Secrets.toml` file, if any.
@@ -59,6 +63,16 @@ runs:
       if: ${{ inputs.secrets != '' }}
       run: echo "${{ inputs.secrets }}" > Secrets.toml
       working-directory: ${{ inputs.working-directory }}
+      shell: bash
+
+    - name: Restart project
+      if: ${{ inputs.restart != 'false' }}
+      run: |
+        cargo shuttle project restart \
+        $(if [ "${{ inputs.name }}" != "" ]; then echo "--name ${{ inputs.name }}"; fi)
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        SHUTTLE_API_KEY: ${{ inputs.deploy-key }}
       shell: bash
 
     - name: Deploy to Shuttle
