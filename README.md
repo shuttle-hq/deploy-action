@@ -20,6 +20,7 @@ Read more about **Shuttle Secrets** [here](https://docs.shuttle.rs/resources/shu
 | allow-dirty           | Allow uncommitted changes to be deployed | false | `"false"` |
 | no-test               | Don't run tests before deployment | false | `"false"` |
 | secrets               | Content of the `Secrets.toml` file, if any | false | `""` |
+| restart               | Restart project before deployment | false | `"false"` |
 
 ## Outputs
 
@@ -72,6 +73,7 @@ jobs:
           allow-dirty: "true"
           no-test: "true"
           cargo-shuttle-version: "0.28.1"
+          restart: "true"
           secrets: |
             MY_AWESOME_SECRET_1 = '${{ secrets.SECRET_1 }}'
             MY_AWESOME_SECRET_2 = '${{ secrets.SECRET_2 }}'
