@@ -39,7 +39,7 @@ runs:
     - id: check-repo-is-not-initialized
       run: echo "remote-url=$( git config --get remote.origin.url )" >> $GITHUB_OUTPUT
       shell: bash
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       if: ${{ !contains(steps.check-repo-is-not-initialized.outputs.remote-url, github.repository) }}
 
       # install with cargo-binstall
