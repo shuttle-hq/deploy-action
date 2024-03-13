@@ -25,6 +25,10 @@ inputs:
     description: "Don't run tests before deployment"
     required: false
     default: "false"
+  time-limit:
+    description: "Time limit of inactivity in minutes. 0 minutes = never sleep service."
+    required: false
+    default: "40"
   secrets:
     description: |
       Content of the `Secrets.toml` file, if any.
@@ -67,6 +71,7 @@ runs:
         $(if [ "${{ inputs.name }}" != "" ]; then echo "--name ${{ inputs.name }}"; fi) \
         $(if [ "${{ inputs.allow-dirty }}" != "false" ]; then echo --allow-dirty; fi) \
         $(if [ "${{ inputs.no-test }}" != "false" ]; then echo --no-test; fi) \
+        $(if [ "${{ inputs.time-limit }}" != "40" ]; then echo --idle-minutes ${{ inputs.time-limit }}; fi) \
         | awk '!/Database URI.*?$/'
       working-directory: ${{ inputs.working-directory }}
       env:
