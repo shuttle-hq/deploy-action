@@ -4,9 +4,9 @@ This action automates the deployment of a Rust project to [Shuttle](https://www.
 
 Note that you need to have created a project on Shuttle before you can deploy to it. Provide the project ID in the inputs.
 
-**Shuttle Secrets** are being saved from previous deployments, therefore, they may be omitted for future deployments.  
+**Shuttle Secrets** are saved from previous deployments. Therefore, they are usually not be needed in your CD pipeline.
 The choice is yours, whether you prefer to add **Shuttle Secrets** with a manual deployment, or in a continuous way using the `secrets` input of this action.
-Read more about **Shuttle Secrets** [here](https://docs.shuttle.rs/resources/shuttle-secrets).
+Read more about **Shuttle Secrets** [here](https://docs.shuttle.dev/resources/shuttle-secrets).
 
 ## Inputs
 
